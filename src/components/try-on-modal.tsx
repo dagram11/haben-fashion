@@ -200,7 +200,9 @@ export function TryOnModal({
 
       if (data.status === 'succeeded' && data.imageUrl) {
         setTryonId(`tryon-${Date.now()}`)
-        setResultImage(data.imageUrl)  // Store URL directly
+        // Proxy the image through our server to avoid CORS/connection issues
+        const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(data.imageUrl)}`
+        setResultImage(proxyUrl)
         setImageLoaded(false)  // Reset image loaded state
         setStatus('completed')
         if (pollingRef.current) {
@@ -414,10 +416,9 @@ export function TryOnModal({
               {/* Image */}
               <div className="aspect-[3/4] rounded-xl overflow-hidden bg-zinc-800 w-full sm:w-64 flex-shrink-0 relative">
                 <img
-                  src={resultImage.startsWith('http') ? resultImage : `data:image/png;base64,${resultImage}`}
+                  src={resultImage}
                   alt="Style preview"
                   className="w-full h-full object-cover"
-                  crossOrigin="anonymous"
                   onLoad={() => setImageLoaded(true)}
                 />
                 {!imageLoaded && (
