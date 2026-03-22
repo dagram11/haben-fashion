@@ -18,7 +18,7 @@ interface TryOnModalProps {
   onClose: () => void
 }
 
-type Status = 'upload' | 'select-size' | 'processing' | 'completed' | 'error'
+type Status = 'upload' | 'processing' | 'completed' | 'error'
 
 export function TryOnModal({
   productId,
@@ -32,13 +32,12 @@ export function TryOnModal({
   const [status, setStatus] = useState<Status>('upload')
   const [userImage, setUserImage] = useState<string>('')
   const [savedImage, setSavedImage] = useState<string>('')
-  const [selectedSize, setSelectedSize] = useState<string>('')
+  const [selectedSize, setSelectedSize] = useState<string>('M')
   const [resultImage, setResultImage] = useState<string>('')
   const [tryonId, setTryonId] = useState<string>('')
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
-  const [elapsedTime, setElapsedTime] = useState(0)
   const [predictionId, setPredictionId] = useState<string>('')
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -62,20 +61,6 @@ export function TryOnModal({
       }
     }
   }, [])
-
-  // Elapsed time tracker
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null
-    if (status === 'processing') {
-      setElapsedTime(0)
-      interval = setInterval(() => {
-        setElapsedTime((prev) => prev + 1)
-      }, 1000)
-    }
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [status])
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -148,8 +133,8 @@ export function TryOnModal({
       } catch (err) {
         console.error('Failed to save image:', err)
       }
-      setSelectedSize('')
-      setStatus('select-size')
+      // Auto-start processing after upload
+      startProcessing(base64)
     }
     
     img.onerror = () => {
@@ -163,8 +148,7 @@ export function TryOnModal({
   const useSavedImage = () => {
     if (savedImage) {
       setUserImage(savedImage)
-      setSelectedSize('')
-      setStatus('select-size')
+      startProcessing(savedImage)
     }
   }
 
@@ -177,45 +161,7 @@ export function TryOnModal({
     }
   }
 
-  const pollForResults = async (id: string, retryCount = 0) => {
-    try {
-      const response = await fetch(`/api/tryon?predictionId=${id}`)
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
-      }
-      
-      const data = await response.json()
-
-      if (data.status === 'succeeded' && data.imageUrl) {
-        setTryonId(`tryon-${Date.now()}`)
-        setResultImage(data.imageUrl)  // Store URL directly
-        setStatus('completed')
-        if (pollingRef.current) {
-          clearInterval(pollingRef.current)
-          pollingRef.current = null
-        }
-      } else if (data.status === 'failed') {
-        setError(data.error || 'Generation failed')
-        setStatus('error')
-        if (pollingRef.current) {
-          clearInterval(pollingRef.current)
-          pollingRef.current = null
-        }
-      }
-      // If still processing, continue polling (interval will call again)
-    } catch (err) {
-      console.error('Poll error:', err)
-      // Don't stop polling on network errors, keep trying
-      // The interval will retry automatically
-    }
-  }
-
-  const handleTryOn = async () => {
-    if (!userImage || !selectedSize) {
-      return
-    }
-
+  const startProcessing = async (imageBase64: string) => {
     setStatus('processing')
     setError('')
 
@@ -225,7 +171,7 @@ export function TryOnModal({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           productId,
-          userImage,
+          userImage: imageBase64,
           size: selectedSize,
           ip: '',
           country: '',
@@ -270,6 +216,42 @@ export function TryOnModal({
     }
   }
 
+  const pollForResults = async (id: string, retryCount = 0) => {
+    try {
+      const response = await fetch(`/api/tryon?predictionId=${id}`)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+      
+      const data = await response.json()
+
+      if (data.status === 'succeeded' && data.imageUrl) {
+        setTryonId(`tryon-${Date.now()}`)
+        setResultImage(data.imageUrl)  // Store URL directly
+        setStatus('completed')
+        if (pollingRef.current) {
+          clearInterval(pollingRef.current)
+          pollingRef.current = null
+        }
+      } else if (data.status === 'failed') {
+        setError(data.error || 'Generation failed')
+        setStatus('error')
+        if (pollingRef.current) {
+          clearInterval(pollingRef.current)
+          pollingRef.current = null
+        }
+      }
+      // If still processing, continue polling (interval will call again)
+    } catch (err) {
+      console.error('Poll error:', err)
+      // Don't stop polling on network errors, keep trying
+      // The interval will retry automatically
+    }
+  }
+
+
+
   const handleDownload = async () => {
     if (!resultImage || isDownloading) return
 
@@ -300,7 +282,7 @@ export function TryOnModal({
       pollingRef.current = null
     }
     setUserImage('')
-    setSelectedSize('')
+    setSelectedSize('M')
     setResultImage('')
     setTryonId('')
     setError('')
@@ -311,12 +293,6 @@ export function TryOnModal({
   const handleClose = () => {
     handleReset()
     onClose()
-  }
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   return (
@@ -419,76 +395,7 @@ export function TryOnModal({
             </div>
           )}
 
-          {status === 'select-size' && (
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* Images Section */}
-              <div className="flex gap-3 lg:gap-4 lg:w-1/2">
-                <div className="flex-1">
-                  <p className="text-xs lg:text-sm text-zinc-400 mb-1 lg:mb-2">Your Photo</p>
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-zinc-800">
-                    <img
-                      src={userImage}
-                      alt="User"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs lg:text-sm text-zinc-400 mb-1 lg:mb-2">Product</p>
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-zinc-800">
-                    <img
-                      src={productImage}
-                      alt={productName}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
 
-              {/* Size & Actions Section */}
-              <div className="lg:w-1/2 flex flex-col justify-center space-y-4 lg:space-y-6">
-                <div>
-                  <p className="text-sm text-zinc-400 mb-2 lg:mb-3">Select Size</p>
-                  <div className="flex flex-wrap gap-2">
-                    {sizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={cn(
-                          'px-5 py-2.5 lg:px-6 lg:py-3 rounded-xl font-medium transition-all',
-                          selectedSize === size
-                            ? 'bg-white text-black'
-                            : 'bg-zinc-800 text-white hover:bg-zinc-700'
-                        )}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row lg:flex-col gap-2 lg:gap-3">
-                  <Button
-                    onClick={handleTryOn}
-                    disabled={!selectedSize}
-                    className="flex-1 rounded-xl bg-white text-black hover:bg-zinc-200"
-                  >
-                    Generate Preview
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setUserImage('')
-                      setStatus('upload')
-                    }}
-                    className="flex-1 rounded-xl"
-                  >
-                    Change Photo
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
 
           {status === 'processing' && (
             <div className="py-16 text-center">
@@ -507,8 +414,8 @@ export function TryOnModal({
               <p className="text-yellow-400 text-sm font-medium">
                 This may take 30 to 100 seconds
               </p>
-              <p className="text-zinc-500 text-sm">
-                Elapsed: {formatTime(elapsedTime)}
+              <p className="text-zinc-400 text-sm">
+                Make sure you have a strong connection
               </p>
             </div>
           )}
@@ -560,7 +467,7 @@ export function TryOnModal({
                   ) : (
                     <>
                       <Download className="w-4 h-4 mr-2" />
-                      Download Free
+                      Free Download
                     </>
                   )}
                 </Button>

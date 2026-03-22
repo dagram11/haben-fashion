@@ -66,14 +66,16 @@ export async function applyWatermarks(
         const urlFontSize = Math.max(20, img.width * 0.03)
         ctx.font = `bold ${urlFontSize}px Arial`
         const urlText = 'lidyafashion.com'
-        const urlWidth = ctx.measureText(urlText).width
-        
-        // URL size: 27% of image width, max 370px
-        const urlBgWidth = Math.min(370, img.width * 0.27)
-        const urlBgHeight = urlFontSize * 2.2
+        const urlTextWidth = ctx.measureText(urlText).width
+
+        // Background fits exactly to text with padding
+        const textPaddingH = urlFontSize * 0.8  // Horizontal padding
+        const textPaddingV = urlFontSize * 0.5  // Vertical padding
+        const urlBgWidth = urlTextWidth + (textPaddingH * 2)
+        const urlBgHeight = urlFontSize + (textPaddingV * 2)
         const urlX = img.width - urlBgWidth - padding
         const urlY = img.height - urlBgHeight - padding
-        
+
         // Draw background
         const gradient = ctx.createLinearGradient(urlX, urlY, urlX + urlBgWidth, urlY + urlBgHeight)
         gradient.addColorStop(0, 'rgba(0, 0, 0, 0.85)')
@@ -82,7 +84,7 @@ export async function applyWatermarks(
         ctx.beginPath()
         ctx.roundRect(urlX, urlY, urlBgWidth, urlBgHeight, 6)
         ctx.fill()
-        
+
         // Draw URL text
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
