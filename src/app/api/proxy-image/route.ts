@@ -17,37 +17,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid URL' }, { status: 400 })
     }
 
-    console.log('Proxying image:', imageUrl)
-
-    const response = await fetch(imageUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      },
-    })
-
-    if (!response.ok) {
-      console.error('Failed to fetch image:', response.status, response.statusText)
-      return NextResponse.json(
-        { error: `Failed to fetch image: ${response.status}` },
-        { status: response.status }
-      )
-    }
-
-    const imageBuffer = await response.arrayBuffer()
-    const contentType = response.headers.get('content-type') || 'image/png'
-
-    console.log('Proxied image successfully, size:', imageBuffer.byteLength)
-
-    return new NextResponse(imageBuffer, {
-      headers: {
-        'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
-      },
-    })
+    // Use redirect instead of proxying to avoid Vercel's 4.5MB response limit
+    // The browser will fetch directly from Replicate's CDN
+    return NextResponse.redirect(imageUrl)
   } catch (error) {
     console.error('Proxy error:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to proxy image' },
+      { error: error instanceof Error ? error.message : 'Failed to redirect' },
       { status: 500 }
     )
   }

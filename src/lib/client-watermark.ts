@@ -6,6 +6,7 @@ export async function applyWatermarks(
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image()
+    img.crossOrigin = 'anonymous'
     
     img.onload = async () => {
       try {
@@ -28,6 +29,7 @@ export async function applyWatermarks(
         // Load and draw logo watermark (top-right)
         try {
           const logoImg = new Image()
+          logoImg.crossOrigin = 'anonymous'
           
           await new Promise<void>((res, rej) => {
             logoImg.onload = () => res()
@@ -105,9 +107,9 @@ export async function applyWatermarks(
     
     img.onerror = () => reject(new Error('Failed to load image'))
     
-    // Handle proxy URLs, direct URLs, and base64 sources
-    if (imageSource.startsWith('/api/') || imageSource.startsWith('http')) {
-      img.src = imageSource  // Proxy URL or direct URL
+    // Handle direct URLs and base64/data URLs
+    if (imageSource.startsWith('http') || imageSource.startsWith('/api/')) {
+      img.src = imageSource  // Direct URL or API route
     } else if (imageSource.startsWith('data:')) {
       img.src = imageSource  // Already a data URL
     } else {

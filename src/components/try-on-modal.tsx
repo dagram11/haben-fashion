@@ -200,9 +200,8 @@ export function TryOnModal({
 
       if (data.status === 'succeeded' && data.imageUrl) {
         setTryonId(`tryon-${Date.now()}`)
-        // Proxy the image through our server to avoid CORS/connection issues
-        const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(data.imageUrl)}`
-        setResultImage(proxyUrl)
+        // Use direct URL - works on Vercel without size limits
+        setResultImage(data.imageUrl)
         setImageLoaded(false)  // Reset image loaded state
         setStatus('completed')
         if (pollingRef.current) {
@@ -419,6 +418,7 @@ export function TryOnModal({
                   src={resultImage}
                   alt="Style preview"
                   className="w-full h-full object-cover"
+                  crossOrigin="anonymous"
                   onLoad={() => setImageLoaded(true)}
                 />
                 {!imageLoaded && (
