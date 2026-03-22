@@ -104,9 +104,40 @@ export function TryOnModal({
   }, [])
 
   const processImage = (file: File) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const base64 = e.target?.result as string
+    // Compress image before processing to avoid 502 errors
+    const img = new Image()
+    const objectUrl = URL.createObjectURL(file)
+    
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl)
+      
+      // Create canvas for compression
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      
+      // Max dimensions for upload (keep reasonable size)
+      const maxSize = 1024
+      let width = img.width
+      let height = img.height
+      
+      if (width > maxSize || height > maxSize) {
+        if (width > height) {
+          height = (height / width) * maxSize
+          width = maxSize
+        } else {
+          width = (width / height) * maxSize
+          height = maxSize
+        }
+      }
+      
+      canvas.width = width
+      canvas.height = height
+      
+      ctx?.drawImage(img, 0, 0, width, height)
+      
+      // Convert to base64 with compression (0.8 quality)
+      const base64 = canvas.toDataURL('image/jpeg', 0.8)
+      
       setUserImage(base64)
       // Save to localStorage for future use
       try {
@@ -118,7 +149,13 @@ export function TryOnModal({
       setSelectedSize('')
       setStatus('select-size')
     }
-    reader.readAsDataURL(file)
+    
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl)
+      setError('Failed to load image')
+    }
+    
+    img.src = objectUrl
   }
 
   const useSavedImage = () => {
