@@ -140,13 +140,7 @@ export function TryOnModal({
 
   const pollForResults = async (id: string, retryCount = 0) => {
     try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
-      
-      const response = await fetch(`/api/tryon?predictionId=${id}`, {
-        signal: controller.signal
-      })
-      clearTimeout(timeoutId)
+      const response = await fetch(`/api/tryon?predictionId=${id}`)
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
@@ -154,9 +148,9 @@ export function TryOnModal({
       
       const data = await response.json()
 
-      if (data.status === 'succeeded' && data.preview) {
+      if (data.status === 'succeeded' && data.imageUrl) {
         setTryonId(`tryon-${Date.now()}`)
-        setResultImage(data.preview)
+        setResultImage(data.imageUrl)  // Store URL directly
         setStatus('completed')
         if (pollingRef.current) {
           clearInterval(pollingRef.current)
@@ -500,9 +494,10 @@ export function TryOnModal({
               {/* Image */}
               <div className="aspect-[3/4] rounded-xl overflow-hidden bg-zinc-800 w-full sm:w-64 flex-shrink-0">
                 <img
-                  src={`data:image/png;base64,${resultImage}`}
+                  src={resultImage.startsWith('http') ? resultImage : `data:image/png;base64,${resultImage}`}
                   alt="Style preview"
                   className="w-full h-full object-cover"
+                  crossOrigin="anonymous"
                 />
               </div>
               

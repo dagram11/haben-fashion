@@ -1,7 +1,7 @@
 // Client-side watermarking utility to avoid Vercel serverless body size limits
 
 export async function applyWatermarks(
-  imageBase64: string,
+  imageSource: string,  // Can be URL or base64
   productName: string
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -104,7 +104,13 @@ export async function applyWatermarks(
     }
     
     img.onerror = () => reject(new Error('Failed to load image'))
-    img.src = `data:image/png;base64,${imageBase64}`
+    
+    // Handle both URL and base64 sources
+    if (imageSource.startsWith('http')) {
+      img.src = imageSource  // Direct URL
+    } else {
+      img.src = `data:image/png;base64,${imageSource}`  // Base64
+    }
   })
 }
 

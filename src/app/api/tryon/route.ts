@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
     console.log('Prediction status:', prediction.id, prediction.status)
 
     if (prediction.status === 'succeeded') {
-      // Get the output image
+      // Get the output image URL
       const output = prediction.output
       let outputUrl: string | null = null
 
@@ -117,18 +117,12 @@ export async function GET(request: NextRequest) {
         })
       }
 
-      console.log('Output URL:', outputUrl)
+      console.log('Prediction succeeded, returning URL:', outputUrl)
 
-      // Download and convert to base64
-      const imageResponse = await fetch(outputUrl)
-      const arrayBuffer = await imageResponse.arrayBuffer()
-      const base64Image = Buffer.from(arrayBuffer).toString('base64')
-
-      console.log('Image downloaded and converted, size:', arrayBuffer.byteLength, 'bytes')
-
+      // Return the URL directly - frontend will fetch it
       return NextResponse.json({
         status: 'succeeded',
-        preview: base64Image,
+        imageUrl: outputUrl,
       })
     } else if (prediction.status === 'failed') {
       return NextResponse.json({
