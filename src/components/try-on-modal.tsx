@@ -39,6 +39,7 @@ export function TryOnModal({
   const [isDragging, setIsDragging] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [predictionId, setPredictionId] = useState<string>('')
+  const [imageLoaded, setImageLoaded] = useState(false)
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
   // Load saved image from localStorage on mount
@@ -89,41 +90,13 @@ export function TryOnModal({
   }, [])
 
   const processImage = (file: File) => {
-    // Compress image before processing to avoid 502 errors
-    const img = new Image()
-    const objectUrl = URL.createObjectURL(file)
+    // Convert to base64 without compression
+    const reader = new FileReader()
     
-    img.onload = () => {
-      URL.revokeObjectURL(objectUrl)
+    reader.onload = (e) => {
+      const base64 = e.target?.result as string
       
-      // Create canvas for compression
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      
-      // Max dimensions for upload (smaller to avoid gateway limits)
-      const maxSize = 800
-      let width = img.width
-      let height = img.height
-      
-      if (width > maxSize || height > maxSize) {
-        if (width > height) {
-          height = (height / width) * maxSize
-          width = maxSize
-        } else {
-          width = (width / height) * maxSize
-          height = maxSize
-        }
-      }
-      
-      canvas.width = width
-      canvas.height = height
-      
-      ctx?.drawImage(img, 0, 0, width, height)
-      
-      // Convert to base64 with compression (0.7 quality for smaller size)
-      const base64 = canvas.toDataURL('image/jpeg', 0.7)
-      
-      console.log('Compressed image size:', Math.round(base64.length / 1024), 'KB')
+      console.log('Image size:', Math.round(base64.length / 1024), 'KB')
       
       setUserImage(base64)
       // Save to localStorage for future use
@@ -137,12 +110,11 @@ export function TryOnModal({
       startProcessing(base64)
     }
     
-    img.onerror = () => {
-      URL.revokeObjectURL(objectUrl)
+    reader.onerror = () => {
       setError('Failed to load image')
     }
     
-    img.src = objectUrl
+    reader.readAsDataURL(file)
   }
 
   const useSavedImage = () => {
@@ -229,6 +201,7 @@ export function TryOnModal({
       if (data.status === 'succeeded' && data.imageUrl) {
         setTryonId(`tryon-${Date.now()}`)
         setResultImage(data.imageUrl)  // Store URL directly
+        setImageLoaded(false)  // Reset image loaded state
         setStatus('completed')
         if (pollingRef.current) {
           clearInterval(pollingRef.current)
@@ -287,6 +260,7 @@ export function TryOnModal({
     setTryonId('')
     setError('')
     setPredictionId('')
+    setImageLoaded(false)
     setStatus('upload')
   }
 
@@ -438,25 +412,36 @@ export function TryOnModal({
           {status === 'completed' && resultImage && (
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
               {/* Image */}
-              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-zinc-800 w-full sm:w-64 flex-shrink-0">
+              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-zinc-800 w-full sm:w-64 flex-shrink-0 relative">
                 <img
                   src={resultImage.startsWith('http') ? resultImage : `data:image/png;base64,${resultImage}`}
                   alt="Style preview"
                   className="w-full h-full object-cover"
                   crossOrigin="anonymous"
+                  onLoad={() => setImageLoaded(true)}
                 />
+                {!imageLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-zinc-800">
+                    <div className="relative w-12 h-12">
+                      <div className="absolute inset-0 border-4 border-zinc-700 rounded-full" />
+                      <div className="absolute inset-0 border-4 border-white border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  </div>
+                )}
               </div>
               
               {/* Buttons beside image on desktop, stacked on mobile */}
               <div className="flex flex-row sm:flex-col gap-3 justify-center sm:justify-start w-full sm:w-auto">
-                <div className="flex items-center gap-2 text-green-400">
-                  <Check className="w-4 h-4" />
-                  <span className="text-sm">Success!</span>
-                </div>
+                {imageLoaded && (
+                  <div className="flex items-center gap-2 text-green-400">
+                    <Check className="w-4 h-4" />
+                    <span className="text-sm">Success!</span>
+                  </div>
+                )}
                 
                 <Button
                   onClick={handleDownload}
-                  disabled={isDownloading}
+                  disabled={isDownloading || !imageLoaded}
                   className="flex-1 sm:flex-none rounded-xl bg-white text-black hover:bg-zinc-200 px-6"
                 >
                   {isDownloading ? (
