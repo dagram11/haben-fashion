@@ -463,7 +463,7 @@ export default function HomePage() {
           productName={tryOnProduct.name}
           productImage={tryOnProduct.image_3 || tryOnProduct.image_1}
           productDescription={tryOnProduct.description}
-          productCategory={tryOnProduct.category}
+          productCategory={tryOnProduct.cloth_type}
           sizes={tryOnProduct.sizes}
           onClose={() => {
             setIsTryOnModalOpen(false)
