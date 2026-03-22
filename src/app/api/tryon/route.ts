@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Replicate from 'replicate'
 
+// Increase body size limit for large image uploads
+export const runtime = 'nodejs'
+export const maxDuration = 60
+
 // Initialize Replicate with the API token
 const getReplicate = () => {
   const token = process.env.REPLICATE_API_TOKEN

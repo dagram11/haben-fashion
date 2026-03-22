@@ -115,8 +115,8 @@ export function TryOnModal({
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
       
-      // Max dimensions for upload (keep reasonable size)
-      const maxSize = 1024
+      // Max dimensions for upload (smaller to avoid gateway limits)
+      const maxSize = 800
       let width = img.width
       let height = img.height
       
@@ -135,8 +135,10 @@ export function TryOnModal({
       
       ctx?.drawImage(img, 0, 0, width, height)
       
-      // Convert to base64 with compression (0.8 quality)
-      const base64 = canvas.toDataURL('image/jpeg', 0.8)
+      // Convert to base64 with compression (0.7 quality for smaller size)
+      const base64 = canvas.toDataURL('image/jpeg', 0.7)
+      
+      console.log('Compressed image size:', Math.round(base64.length / 1024), 'KB')
       
       setUserImage(base64)
       // Save to localStorage for future use
