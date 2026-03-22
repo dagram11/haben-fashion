@@ -138,9 +138,20 @@ export function TryOnModal({
     }
   }
 
-  const pollForResults = async (id: string) => {
+  const pollForResults = async (id: string, retryCount = 0) => {
     try {
-      const response = await fetch(`/api/tryon?predictionId=${id}`)
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
+      
+      const response = await fetch(`/api/tryon?predictionId=${id}`, {
+        signal: controller.signal
+      })
+      clearTimeout(timeoutId)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+      
       const data = await response.json()
 
       if (data.status === 'succeeded' && data.preview) {
@@ -163,6 +174,7 @@ export function TryOnModal({
     } catch (err) {
       console.error('Poll error:', err)
       // Don't stop polling on network errors, keep trying
+      // The interval will retry automatically
     }
   }
 
@@ -206,13 +218,13 @@ export function TryOnModal({
         // Start polling for results
         setPredictionId(data.predictionId)
         
-        // Aggressive polling: every 1 second for faster response
+        // Poll every 2 seconds to avoid connection issues
         pollingRef.current = setInterval(() => {
           pollForResults(data.predictionId)
-        }, 1000)
+        }, 2000)
 
-        // Also poll immediately after 500ms
-        setTimeout(() => pollForResults(data.predictionId), 500)
+        // Also poll immediately after 1 second
+        setTimeout(() => pollForResults(data.predictionId), 1000)
       } else {
         throw new Error('No prediction ID received')
       }
