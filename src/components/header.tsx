@@ -2,10 +2,9 @@
 
 import { useState, useEffect, useSyncExternalStore } from 'react'
 import Link from 'next/link'
-import { ShoppingBag, Menu, X, User, LogOut } from 'lucide-react'
+import { ShoppingBag, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/store/cart'
-import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
 
 const categories = [
@@ -31,9 +30,6 @@ export function Header({ currentCategory = 'all', onCategoryChange, showFilters 
   const itemCount = useCartStore((state) => state.getItemCount())
   const openCart = useCartStore((state) => state.openCart)
   const openContact = useCartStore((state) => state.openContact)
-  
-  // Auth state
-  const { user, isAuthenticated, openAuthModal, logout } = useAuthStore()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,32 +93,6 @@ export function Header({ currentCategory = 'all', onCategoryChange, showFilters 
 
           {/* Right Actions */}
           <div className="flex items-center gap-3">
-            {/* User Button */}
-            {isAuthenticated && user ? (
-              <button
-                onClick={logout}
-                className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition-colors"
-                title="Logout"
-              >
-                <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    {user.name?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                </div>
-                <span className="text-sm font-medium text-black hidden md:block">
-                  Hi, {user.name?.split(' ')[0]}
-                </span>
-              </button>
-            ) : (
-              <button
-                onClick={() => openAuthModal('login')}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                aria-label="Sign in"
-              >
-                <User className="w-5 h-5 text-black" />
-              </button>
-            )}
-
             <button
               onClick={openCart}
               className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -178,46 +148,6 @@ export function Header({ currentCategory = 'all', onCategoryChange, showFilters 
               >
                 Contact
               </button>
-              
-              {/* Auth Buttons */}
-              <div className="border-t border-gray-100 mt-2 pt-2">
-                {isAuthenticated && user ? (
-                  <>
-                    <div className="px-4 py-3 flex items-center gap-3">
-                      <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
-                        <span className="text-white font-medium">
-                          {user.name?.charAt(0).toUpperCase() || 'U'}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-black">{user.name}</p>
-                        <p className="text-sm text-gray-500">{user.email}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false)
-                        logout()
-                      }}
-                      className="w-full px-4 py-3 rounded-xl text-left text-sm font-medium text-red-500 hover:bg-red-50 transition-colors flex items-center gap-2"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Sign Out
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      openAuthModal('login')
-                    }}
-                    className="w-full px-4 py-3 rounded-xl text-left text-sm font-medium text-black hover:bg-gray-50 transition-colors flex items-center gap-2"
-                  >
-                    <User className="w-4 h-4" />
-                    Sign In
-                  </button>
-                )}
-              </div>
             </nav>
           </div>
         )}

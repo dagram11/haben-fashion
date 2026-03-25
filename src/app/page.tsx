@@ -9,7 +9,6 @@ import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
 import { TryOnModal } from '@/components/try-on-modal'
 import { ContactModal } from '@/components/contact-modal'
-import { AuthModal } from '@/components/auth-modal'
 import { VideoModal } from '@/components/video-modal'
 import { ArrowRight, Sparkles, Truck, Shield, RefreshCw, Star, Play, ChevronRight, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -453,7 +452,6 @@ export default function HomePage() {
       />
       <CheckoutModal />
       <ContactModal />
-      <AuthModal />
       <VideoModal />
       
       {/* Style Preview Modal */}
