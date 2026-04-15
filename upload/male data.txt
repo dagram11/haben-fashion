@@ -1,0 +1,16 @@
+product image order,product name,image url,price,colors,description
+m11,White Kurta with Green Side Panel,https://images2.imgbox.com/ad/b2/Jf9zURoS_o.jpeg,350,"White ,  Gold ",Classic white long-sleeved kurta featuring a vertical green and gold patterned panel on the left side. Matching embroidered trim accents the mandarin collar and sleeve cuffs
+m12,,https://images2.imgbox.com/eb/49/LMG9aTax_o.png,,,
+m13,,https://images2.imgbox.com/eb/49/LMG9aTax_o.png,,,
+m21,White Tunic with Red Geometric Yoke,https://images2.imgbox.com/28/4e/xfZTzfhc_o.jpeg,300,"White, Red","Simple white long-sleeved tunic distinguished by a bold red and orange geometric pattern around the neckline. The design is mirrored on the sleeve cuffs for a cohesive look."
+m22,,https://images2.imgbox.com/65/30/Fs2U39cc_o.png,,,
+m23,,https://images2.imgbox.com/65/30/Fs2U39cc_o.png,,,
+m31,White Kurta with Colorful Chest Embroidery,https://images2.imgbox.com/3f/86/5YGwz875_o.jpeg,385,"White , Red, Gold","Traditional white kurta featuring vibrant multi-colored embroidery running down the center chest in vertical stripes. The detailed stitching ends in a geometric diamond motif, with matching cuffs."
+m32,,https://images2.imgbox.com/22/2e/vhXO5XSX_o.png,,,
+m33,,https://images2.imgbox.com/22/2e/vhXO5XSX_o.png,,,
+m41,Emerald Green Embroidered Shirt,https://images2.imgbox.com/d3/db/buMr2Mm3_o.jpeg,300,Green,"Deep green long-sleeved shirt featuring intricate white geometric embroidery on the upper right chest. It has a clean mandarin collar and a subtle button placket."
+m42,,https://images2.imgbox.com/e4/60/vhMg0H08_o.png,,,
+m43,,https://images2.imgbox.com/e4/60/vhMg0H08_o.png,,,
+m51,White Linen Shirt with Black Motif,https://images2.imgbox.com/18/fa/FxAGXeEA_o.jpeg,320,"White, Black",Relaxed white linen shirt featuring bold black geometric embroidery on the left shoulder and chest. Matching black patterned trim adorns the rolled-up sleeve cuffs.
+m52,,https://images2.imgbox.com/37/0c/tWibS957_o.png,,,
+m53,,https://images2.imgbox.com/37/0c/tWibS957_o.png,,,

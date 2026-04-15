@@ -1,0 +1,31 @@
+product image order,product name,image url,price,colors,description
+w11,Navy Velvet Evening Gown,https://images2.imgbox.com/ef/70/HjWeBP2q_o.jpeg,650,"Black , gold","Luxurious navy blue velvet gown with a square neckline and heavy gold embroidery on the bodice. The floor-length skirt finishes with an elaborate, wide band of gold architectural patterns."
+w12,,https://images2.imgbox.com/ff/b8/3HBfa7sk_o.jpeg,,,
+w13,,https://images2.imgbox.com/b2/17/aJ9SGK0x_o.png,,,
+w21,White & Purple Floral Maxi,https://images2.imgbox.com/16/a4/DxmL4oel_o.jpeg,350,"White , Purple","Elegant sleeveless white maxi dress with a scoop neckline detailed in purple floral embroidery. The hem features a wide, semi-sheer panel showcasing a dense pattern of purple flowers."
+w22,,https://images2.imgbox.com/27/18/YFUlPZMb_o.jpeg,,,
+w23,,https://images2.imgbox.com/d4/c5/AIOLDu9i_o.png,,,
+w31,Traditional White & Red Kemis,https://images2.imgbox.com/dc/44/vhCF2ud2_o.jpeg,480,"White , Red","Traditional white dress with puffed sleeves and a bold red center panel featuring gold embroidery and a cross motif. The neckline, cuffs, and hem are trimmed with matching red fabric and gold diamond patterns."
+w32,,https://images2.imgbox.com/04/96/fUCHT9ct_o.jpeg,,,
+w33,,https://images2.imgbox.com/ba/bd/RF97HgbR_o.png,,,
+w41,Black Tunic with Gold Trim,https://images2.imgbox.com/1a/10/V2zILFP9_o.jpeg,400,"Black, Gold","Relaxed black midi dress with short sleeves and a V-neckline trimmed in yellow braided embroidery. A vertical yellow line runs down the center, ending in a large geometric cross design."
+w42,,https://images2.imgbox.com/8a/af/zPEUvDmN_o.jpeg,,,
+w43,,https://images2.imgbox.com/4a/b3/EnAvPDCD_o.png,,,
+w51,White Dress with Patterned Hem,https://images2.imgbox.com/47/87/v2DB4nQx_o.jpeg,450,"White , Black, Gold","Sleeveless white A-line dress with a V-neckline accented by black and yellow floral motifs. The skirt features a bold, contrasting lower section with a black and yellow abstract leaf pattern."
+w52,,https://images2.imgbox.com/53/c4/PkLlCujJ_o.jpeg,,,
+w53,,https://images2.imgbox.com/74/34/bg1KzKzF_o.png,,,
+w61,White & Purple Geometric Dress,https://images2.imgbox.com/06/50/G46JjkhT_o.jpeg,400,"White , Purple",Classic white dress with puffed sleeves and purple diamond embroidery running down the center. It features a decorative cross motif and a matching geometric border along the hem.
+w62,,https://images2.imgbox.com/5d/09/frULytAZ_o.jpeg,,,
+w63,,https://images2.imgbox.com/c9/d6/Q8i59Jl1_o.png,,,
+w71,White Maxi with Gold & Blue Trim,https://images2.imgbox.com/a6/62/jlDiBFib_o.jpeg,420,"White, Golden",Elegant white maxi with ruffled puff sleeves and a V-neckline detailed in gold and turquoise. The wide hem displays an intricate band of traditional cross motifs in matching colors.
+w72,,https://images2.imgbox.com/a6/b2/ITdH6HcT_o.jpeg,,,
+w73,,https://images2.imgbox.com/2d/e9/fAyFM6DE_o.jpeg,,,
+w81,White Gown with Emerald Accents,https://images2.imgbox.com/c8/d1/RBtLVU7d_o.jpeg,450,"white, Emerald","Traditional white gown with puffed sleeves and emerald green embroidery running from the neck to a central diamond motif. Includes a matching green waistband and a wide, patterned green border at the hem."
+w82,,https://images2.imgbox.com/78/e7/3MiWDJb3_o.jpeg,,,
+w83,,https://images2.imgbox.com/e9/0a/6Axbqy5o_o.png,,,
+w91,Sleeveless White Dress with Teal Bands,https://images2.imgbox.com/8f/9c/BERiDoYx_o.jpeg,400,"White , Teal","Sleeveless white dress with a square neckline framed by teal and gold embroidered fabric. The lower skirt features two wide, horizontal bands of intricate teal patterning."
+w92,,https://images2.imgbox.com/94/57/VQkysw70_o.jpeg,,,
+w93,,https://images2.imgbox.com/cf/05/r1w4MMYz_o.png,,,
+w10 1,Cream Dress with Lime Green Detail,https://images2.imgbox.com/be/82/0Aq78CU0_o.jpeg,400,"White , Lime","Cream maxi dress with puffed sleeves and a bold lime green zig-zag embroidery panel down the center. The hem is finished with a wide, shiny green band featuring delicate floral vine stitching."
+w 10 2,,https://images2.imgbox.com/58/81/fKe2RjRM_o.jpeg,,,
+w 10 3,,https://images2.imgbox.com/26/92/KEigdIGE_o.png,,,
