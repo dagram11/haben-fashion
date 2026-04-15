@@ -7,11 +7,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
-  allowedDevOrigins: [
-    'preview-chat-b1e6601c-aa52-4999-a384-9cf2c7f5e5c9.space.z.ai',
-    '.space.z.ai',
-  ],
-  
+
   // Enable image optimization for external sources
   images: {
     remotePatterns: [
