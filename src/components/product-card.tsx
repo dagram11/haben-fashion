@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Heart, ShoppingBag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/store/cart'
@@ -58,22 +59,26 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
       {/* Image Container */}
       <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-100 mb-4 shadow-lg shadow-gray-200/50">
         {/* Primary Image */}
-        <img
+        <Image
           src={product.image_1}
           alt={product.name}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className={cn(
-            'w-full h-full object-cover transition-all duration-500',
+            'object-cover transition-all duration-500',
             hasSecondImage && isHovered ? 'opacity-0' : 'opacity-100'
           )}
         />
         
         {/* Secondary Image - Shows on Hover (Shopify style) */}
         {hasSecondImage && (
-          <img
-            src={product.image_2}
+          <Image
+            src={product.image_2!}
             alt={`${product.name} - alternate view`}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className={cn(
-              'absolute inset-0 w-full h-full object-cover transition-all duration-500',
+              'object-cover transition-all duration-500',
               isHovered ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
             )}
           />

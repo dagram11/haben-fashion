@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { ProductCard } from '@/components/product-card'
@@ -149,8 +150,8 @@ export default function HomePage() {
                         'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&h=100&fit=crop',
                         'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
                       ].map((src, i) => (
-                        <div key={i} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden shadow-sm">
-                          <img src={src} alt={`User ${i + 1}`} className="w-full h-full object-cover" />
+                        <div key={i} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden shadow-sm relative">
+                          <Image src={src} alt={`User ${i + 1}`} fill sizes="32px" className="object-cover" />
                         </div>
                       ))}
                     </div>
@@ -186,28 +187,34 @@ export default function HomePage() {
                 <div className="relative">
                   {/* Main Product Image */}
                   <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-gray-100 shadow-2xl shadow-gray-300/50">
-                    <img
+                    <Image
                       src="https://images2.imgbox.com/c8/d1/RBtLVU7d_o.jpeg"
                       alt="White Gown with Emerald Accents"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 1024px) 0vw, 50vw"
+                      className="object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                   </div>
                   
                   {/* Floating Secondary Images */}
                   <div className="absolute -right-8 top-20 w-32 aspect-square rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-gray-100">
-                    <img
+                    <Image
                       src="https://images2.imgbox.com/e9/0a/6Axbqy5o_o.png"
                       alt="Fashion"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="128px"
+                      className="object-cover"
                     />
                   </div>
                   
                   <div className="absolute -left-8 bottom-40 w-28 aspect-[3/4] rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-gray-100">
-                    <img
+                    <Image
                       src="https://images2.imgbox.com/ef/70/HjWeBP2q_o.jpeg"
                       alt="Fashion"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="112px"
+                      className="object-cover"
                     />
                   </div>
                 </div>
@@ -259,11 +266,13 @@ export default function HomePage() {
                   
                   {/* Right Side - Image (62%) */}
                   <div className="w-[62%]">
-                    <div className="aspect-[3/4] rounded-2xl overflow-hidden m-1">
-                      <img
+                    <div className="aspect-[3/4] rounded-2xl overflow-hidden m-1 relative">
+                      <Image
                         src="https://images2.imgbox.com/c8/d1/RBtLVU7d_o.jpeg"
                         alt="Winter Collection"
-                        className="w-full h-full object-cover object-top"
+                        fill
+                        sizes="(max-width: 640px) 62vw, 0vw"
+                        className="object-cover object-top"
                       />
                     </div>
                   </div>
