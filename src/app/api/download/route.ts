@@ -3,15 +3,6 @@ import sharp from 'sharp'
 import { readFile } from 'fs/promises'
 import path from 'path'
 
-// Increase body size limit for Vercel serverless functions
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '50mb',
-    },
-  },
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
