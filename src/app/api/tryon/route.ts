@@ -57,10 +57,10 @@ export async function POST(request: NextRequest) {
       input: {
         image_input: [userImage, productImage],
         prompt: prompt,
-        negative_prompt: 'low quality, bad quality, blurry, distorted, ugly, deformed',
-        num_inference_steps: 28,
-        guidance_scale: 7,
-        seed: 42,
+        // negative_prompt: 'low quality, bad quality, blurry, distorted, ugly, deformed',
+       // num_inference_steps: 28,
+       // guidance_scale: 7,
+        // seed: 42,
       }
     })
 
