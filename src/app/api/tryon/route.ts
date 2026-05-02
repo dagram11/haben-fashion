@@ -55,13 +55,9 @@ export async function POST(request: NextRequest) {
     const prediction = await replicate.predictions.create({
       version: 'bytedance/seedream-4.5',
       input: {
-        size: "4K",
         image_input: [userImage, productImage],
         prompt: prompt,
-        // negative_prompt: 'low quality, bad quality, blurry, distorted, ugly, deformed',
-       // num_inference_steps: 28,
-       // guidance_scale: 7,
-        // seed: 42,
+        aspect_ratio: "match_input_image"
       }
     })
 
