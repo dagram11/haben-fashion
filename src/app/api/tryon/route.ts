@@ -53,14 +53,14 @@ export async function POST(request: NextRequest) {
 
     // Create prediction with bytedance/seedream-5-lite model
     const prediction = await replicate.predictions.create({
-      version: 'bytedance/seedream-5-lite',
+      version: 'bytedance/seedream-4.5',
       input: {
         image_input: [userImage, productImage],
         prompt: prompt,
         negative_prompt: 'low quality, bad quality, blurry, distorted, ugly, deformed',
         num_inference_steps: 28,
-        guidance_scale: 3.5,
-        seed: Math.floor(Math.random() * 1000000),
+        guidance_scale: 7,
+        seed: 42,
       }
     })
 
